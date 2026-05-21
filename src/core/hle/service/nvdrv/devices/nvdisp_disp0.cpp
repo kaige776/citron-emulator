@@ -78,10 +78,9 @@ void nvdisp_disp0::Composite(std::span<const Nvnflinger::HwcLayer> sorted_layers
             .is_applet = layer.is_applet,
             .blending = ConvertBlending(layer.blending),
         });
-
-        for (size_t i = 0; i < layer.acquire_fence.num_fences; i++) {
-            output_fences.push_back(layer.acquire_fence.fences[i]);
-        }
+        for (size_t i = 0; i < layer.acquire_fence.num_fences; i++)
+            if (layer.acquire_fence.fences[i].id >= 0)
+                output_fences.push_back(layer.acquire_fence.fences[i]);
     }
 
     system.Renderer().SetMainApplicationAruid(system.GetMainApplicationAruid());
